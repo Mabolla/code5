@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { MutateOptions } from "@tanstack/react-query";
 import { Abi, ExtractAbiFunctionNames } from "abitype";
-import { Config, UseWriteContractParameters, useAccount, useConfig, useWriteContract } from "wagmi";
+import { Config, UseWriteContractParameters, useAccount, useWriteContract } from "wagmi";
 import { WriteContractErrorType, WriteContractReturnType } from "wagmi/actions";
 import { WriteContractVariables } from "wagmi/query";
 import { useSelectedNetwork } from "~~/hooks/scaffold-eth";
 import { useDeployedContractInfo, useTransactor } from "~~/hooks/scaffold-eth";
+import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { AllowedChainIds, notification } from "~~/utils/scaffold-eth";
 import {
   ContractAbi,
@@ -60,8 +61,6 @@ export function useScaffoldWriteContract<TContractName extends ContractName>(
       ? { contractName: configOrName, writeContractParams, chainId: undefined }
       : (configOrName as UseScaffoldWriteConfig<TContractName>);
   const { contractName, chainId, writeContractParams: finalWriteContractParams } = finalConfig;
-
-  const wagmiConfig = useConfig();
 
   useEffect(() => {
     if (typeof configOrName === "string") {
