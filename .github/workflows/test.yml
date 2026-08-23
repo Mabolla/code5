@@ -21,8 +21,11 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Configure generator
+        run: |
+          git config --global user.name "Mabolla Builder"
+          git config --global user.email "133767935+Mabolla@users.noreply.github.com"
+          corepack enable
 
       - name: Scaffold official challenge
         run: printf '\n' | npx --yes create-eth@2.0.23 -e challenge-tokenization challenge-tokenization
