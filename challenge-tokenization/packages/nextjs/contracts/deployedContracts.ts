@@ -25,6 +25,23 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "tokenIdCounter",
+          inputs: [],
+          outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "tokenOfOwnerByIndex",
+          inputs: [
+            { name: "owner", type: "address", internalType: "address" },
+            { name: "index", type: "uint256", internalType: "uint256" },
+          ],
+          outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
           name: "balanceOf",
           inputs: [{ name: "owner", type: "address", internalType: "address" }],
           outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
