@@ -1,0 +1,4 @@
+challenge-tokenization/
+node_modules/
+.env
+.env.local
