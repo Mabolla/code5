@@ -2,6 +2,9 @@ name: Deploy Crowdfunding to Sepolia
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/deploy-crowdfunding.yml"
 
 permissions:
   contents: write
@@ -29,9 +32,10 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      - name: Check deployer secret
+      - name: Check required secrets
         run: |
           test -n "$__RUNTIME_DEPLOYER_PRIVATE_KEY" || (echo "Missing SEPOLIA_DEPLOYER_PRIVATE_KEY secret" && exit 1)
+          test -n "$ETHERSCAN_API_KEY" || (echo "Missing ETHERSCAN_API_KEY secret" && exit 1)
 
       - name: Install challenge
         run: yarn install
@@ -40,7 +44,6 @@ jobs:
         run: yarn workspace @se-2/hardhat hardhat deploy --network sepolia --skip-prompts
 
       - name: Verify contracts
-        continue-on-error: true
         run: yarn verify --network sepolia
 
       - name: Save deployed contract data
