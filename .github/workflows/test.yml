@@ -40,11 +40,14 @@ jobs:
           git commit -m "feat: add SpeedRun Ethereum tokenization challenge"
           git push
 
-      - name: Install committed challenge
-        if: ${{ hashFiles('challenge-tokenization/package.json') != '' }}
+      - name: Install challenge
         working-directory: challenge-tokenization
         run: yarn install
 
       - name: Run grading tests
         working-directory: challenge-tokenization
         run: yarn test
+
+      - name: Build Sepolia frontend
+        working-directory: challenge-tokenization
+        run: yarn next:build
