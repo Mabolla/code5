@@ -1,0 +1,33 @@
+name: Test Tokenization Challenge
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Scaffold official challenge
+        run: printf '\n' | npx --yes create-eth@2.0.23 -e challenge-tokenization challenge-tokenization
+
+      - name: Run grading tests
+        working-directory: challenge-tokenization
+        run: yarn test
