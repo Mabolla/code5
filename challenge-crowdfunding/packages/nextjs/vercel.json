@@ -1,5 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npx eslint . && npx next build"
+  "installCommand": "corepack enable && yarn install --no-immutable",
+  "buildCommand": "yarn build"
 }
