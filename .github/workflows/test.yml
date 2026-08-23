@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   test:
@@ -30,7 +30,18 @@ jobs:
           corepack enable
 
       - name: Scaffold official challenge
-        run: printf '\n' | npx --yes create-eth@2.0.23 -e challenge-tokenization challenge-tokenization
+        if: ${{ hashFiles('challenge-tokenization/package.json') == '' }}
+        run: |
+          printf '\n' | npx --yes create-eth@2.0.23 -e challenge-tokenization challenge-tokenization
+          rm -rf challenge-tokenization/.git
+          git add challenge-tokenization
+          git commit -m "feat: add SpeedRun Ethereum tokenization challenge"
+          git push
+
+      - name: Install committed challenge
+        if: ${{ hashFiles('challenge-tokenization/package.json') != '' }}
+        working-directory: challenge-tokenization
+        run: yarn install
 
       - name: Run grading tests
         working-directory: challenge-tokenization
