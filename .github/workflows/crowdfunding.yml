@@ -1,0 +1,42 @@
+name: Test Crowdfunding Challenge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "challenge-crowdfunding/**"
+      - ".github/workflows/crowdfunding.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
+    defaults:
+      run:
+        working-directory: challenge-crowdfunding
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install challenge
+        run: yarn install
+
+      - name: Run grading tests
+        run: yarn test
+
+      - name: Build frontend
+        run: yarn next:build
