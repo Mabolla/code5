@@ -34,7 +34,7 @@ jobs:
         run: |
           printf '\n' | npx --yes create-eth@2.0.23 -e challenge-tokenization challenge-tokenization
           rm -rf challenge-tokenization/.git
-          git add challenge-tokenization
+          git add -f challenge-tokenization
           git commit -m "feat: add SpeedRun Ethereum tokenization challenge"
           git push
 
