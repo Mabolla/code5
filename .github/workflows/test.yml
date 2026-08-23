@@ -12,6 +12,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
