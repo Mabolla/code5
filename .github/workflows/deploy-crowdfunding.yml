@@ -1,0 +1,54 @@
+name: Deploy Crowdfunding to Sepolia
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
+      __RUNTIME_DEPLOYER_PRIVATE_KEY: ${{ secrets.SEPOLIA_DEPLOYER_PRIVATE_KEY }}
+      ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+    defaults:
+      run:
+        working-directory: challenge-crowdfunding
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Check deployer secret
+        run: |
+          test -n "$__RUNTIME_DEPLOYER_PRIVATE_KEY" || (echo "Missing SEPOLIA_DEPLOYER_PRIVATE_KEY secret" && exit 1)
+
+      - name: Install challenge
+        run: yarn install
+
+      - name: Deploy contracts
+        run: yarn workspace @se-2/hardhat hardhat deploy --network sepolia --skip-prompts
+
+      - name: Verify contracts
+        continue-on-error: true
+        run: yarn verify --network sepolia
+
+      - name: Save deployed contract data
+        run: |
+          git config user.name "Mabolla Builder"
+          git config user.email "133767935+Mabolla@users.noreply.github.com"
+          git add -f packages/nextjs/contracts/deployedContracts.ts packages/hardhat/deployments || true
+          if ! git diff --cached --quiet; then
+            git commit -m "deploy: crowdfunding contracts on Sepolia"
+            git push
+          fi
